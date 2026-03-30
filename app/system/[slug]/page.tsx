@@ -12,8 +12,9 @@ export function generateStaticParams() {
     .map((page) => ({ slug: page.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const page = systemPages.find((item) => item.slug === params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const page = systemPages.find((item) => item.slug === slug);
   if (!page || page.slug === 'lifecycle') {
     return {};
   }
@@ -25,8 +26,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function SystemDetailPage({ params }: { params: { slug: string } }) {
-  const page = systemPages.find((item) => item.slug === params.slug);
+export default async function SystemDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const page = systemPages.find((item) => item.slug === slug);
 
   if (!page || page.slug === 'lifecycle') {
     notFound();

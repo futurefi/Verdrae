@@ -1,12 +1,13 @@
 export const siteConfig = {
-  name: "Fixing Broken Marketing",
+  name: 'Fixing Broken Marketing',
   description:
-    "From random acts of marketing to a structured growth system.",
-  url: "https://ramisalem.com",
-  ogImage: "https://ramisalem.com/og-image.png",
+    'A structured guide for turning disconnected marketing activity into a growth system.',
+  url: 'https://example.com',
+  ogImage: '/og-image.png',
+  pdfPath: '/marketing-education-v2.pdf',
   links: {
-    linkedin: "https://www.linkedin.com/in/salemrami",
-  },
+    linkedin: 'https://www.linkedin.com'
+  }
 };
 
 export const primaryNav = [
