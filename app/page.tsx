@@ -52,7 +52,7 @@ const stageData = [
     trigger: 'Explicit buying intent',
     signals: [
       'Pricing page interaction',
-      'Demo or contact request',
+      'Demo / contact request',
       'Sales conversation initiated',
     ],
     short: 'Reduce friction and create confidence.',
@@ -85,11 +85,11 @@ const stageData = [
     text: 'text-orange-200',
     icon: '◔',
     value: 'Ensure continuous value and reinforce usage',
-    trigger: 'Change in engagement, whether positive or negative',
+    trigger: 'Change in engagement (increase or decline)',
     signals: [
       'Usage frequency',
       'Feature adoption',
-      'Inactivity versus baseline',
+      'Inactivity vs baseline',
     ],
     short: 'Reinforce value through use.',
   },
@@ -140,7 +140,7 @@ const winbackData = [
     signals: [
       'Drop in usage',
       'Negative feedback',
-      'Reduced engagement versus baseline',
+      'Reduced engagement vs baseline',
     ],
   },
   {
@@ -159,6 +159,49 @@ const winbackData = [
   },
 ];
 
+const systemLayers = [
+  {
+    title: 'Market Reality',
+    text: 'Understanding real signals, not assumptions.',
+  },
+  {
+    title: 'Identity',
+    text: 'Defining who you actually serve.',
+  },
+  {
+    title: 'Value',
+    text: 'Making decisions easier and inaction costly.',
+  },
+  {
+    title: 'Positioning',
+    text: 'Choosing where and how you compete.',
+  },
+  {
+    title: 'Lifecycle',
+    text: 'Turning interest into sustained value.',
+  },
+  {
+    title: 'Operations',
+    text: 'Connecting data, channels, and execution.',
+  },
+  {
+    title: 'Feedback Loop',
+    text: 'Learning from sales, marketing, and product.',
+  },
+  {
+    title: 'Operating Model',
+    text: 'How the system runs over time.',
+  },
+];
+
+function SectionEyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-4 text-sm uppercase tracking-[0.2em] text-[#8791A1]">
+      {children}
+    </div>
+  );
+}
+
 function StageCard({
   item,
   active,
@@ -176,7 +219,7 @@ function StageCard({
       className={`group relative rounded-[28px] border ${item.ring} bg-gradient-to-br ${item.accent} p-5 text-left transition duration-300 ${
         active
           ? 'scale-[1.02] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_20px_60px_rgba(0,0,0,0.35)]'
-          : 'opacity-80 hover:opacity-100'
+          : 'opacity-85 hover:opacity-100'
       }`}
     >
       <div className="flex items-start justify-between gap-4">
@@ -250,7 +293,7 @@ function DetailPanel({ item }: { item: (typeof stageData)[number] }) {
   );
 }
 
-export default function FixingBrokenMarketingSite() {
+export default function HomePage() {
   const [activeStage, setActiveStage] = useState(stageData[0]);
 
   return (
@@ -261,11 +304,14 @@ export default function FixingBrokenMarketingSite() {
             Fixing Broken Marketing
           </div>
           <nav className="hidden gap-8 text-sm text-[#B7BDC8] md:flex">
-            <a href="#interactive-lifecycle" className="transition hover:text-white">
+            <a href="#system" className="transition hover:text-white">
+              System
+            </a>
+            <a href="#lifecycle" className="transition hover:text-white">
               Lifecycle
             </a>
-            <a href="#winback" className="transition hover:text-white">
-              Winback
+            <a href="#outcome" className="transition hover:text-white">
+              Outcome
             </a>
           </nav>
         </div>
@@ -274,41 +320,129 @@ export default function FixingBrokenMarketingSite() {
       <main>
         <section className="relative overflow-hidden border-b border-white/10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(127,166,161,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(143,167,191,0.12),transparent_30%)]" />
-          <div className="relative mx-auto max-w-[1440px] px-5 py-24 md:px-8 md:py-32 lg:px-12 lg:py-36">
-            <div className="max-w-4xl">
-              <div className="mb-6 text-sm uppercase tracking-[0.22em] text-[#B7BDC8]">
-                Funnel + Lifecycle
-              </div>
+          <div className="relative mx-auto max-w-[1440px] px-5 py-24 md:px-8 md:py-32 lg:px-12 lg:py-40">
+            <div className="max-w-5xl">
+              <SectionEyebrow>Marketing operating system</SectionEyebrow>
               <h1
-                className="max-w-5xl text-5xl font-medium leading-[0.96] tracking-[-0.04em] md:text-7xl lg:text-[6rem]"
+                className="max-w-5xl text-5xl font-medium leading-[0.96] tracking-[-0.04em] md:text-7xl lg:text-[6.2rem]"
                 style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
               >
-                Where the system becomes action.
+                From Random Acts of Marketing to a Growth System
               </h1>
-              <p className="mt-8 max-w-[65ch] text-lg leading-8 text-[#B7BDC8] md:text-xl">
-                Each stage answers three questions: what value is created, when
-                to act, and which signals indicate movement.
+              <p className="mt-8 max-w-[65ch] text-xl leading-9 text-[#F3F1EA] md:text-2xl">
+                Most companies do not have a marketing problem. They have a structure problem.
+              </p>
+              <p className="mt-6 max-w-[60ch] text-lg leading-8 text-[#B7BDC8]">
+                Marketing activity increases. Results do not.
               </p>
             </div>
           </div>
         </section>
 
-        <section id="interactive-lifecycle" className="border-b border-white/10">
-          <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
-            <div className="mb-10 max-w-3xl">
-              <div className="mb-4 text-sm uppercase tracking-[0.2em] text-[#8791A1]">
-                The continuous lifecycle
-              </div>
+        <section className="border-b border-white/10">
+          <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-20 md:px-8 md:py-24 lg:grid-cols-12 lg:px-12 lg:py-28">
+            <div className="lg:col-span-5">
+              <SectionEyebrow>The break</SectionEyebrow>
               <h2
                 className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
                 style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
               >
-                Marketing does not end at purchase.
+                Why marketing feels busy but does not compound
+              </h2>
+            </div>
+            <div className="space-y-5 lg:col-span-7">
+              <p className="max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                Campaigns run, but do not connect. Messaging exists, but does not differentiate. Data is collected, but not used to decide.
+              </p>
+              <p className="max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                Marketing becomes a series of isolated actions instead of a system.
+              </p>
+              <div className="rounded-[28px] border border-white/10 bg-[#151922] p-6">
+                <p className="text-2xl leading-9 text-white" style={{ fontFamily: 'Georgia, Times New Roman, serif' }}>
+                  Activity without accumulation is not growth.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-white/10">
+          <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-20 md:px-8 md:py-24 lg:grid-cols-12 lg:px-12 lg:py-28">
+            <div className="lg:col-span-5">
+              <SectionEyebrow>The shift</SectionEyebrow>
+              <h2
+                className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                Marketing starts working when it becomes a system
+              </h2>
+            </div>
+            <div className="space-y-6 lg:col-span-7">
+              <p className="max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                Not a set of activities. A structure.
+              </p>
+              <p className="max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                A system connects what you learn from the market, how you define value, how decisions are made, how actions are triggered, how results are measured, and how all of it improves over time.
+              </p>
+              <div className="grid gap-4 md:grid-cols-5">
+                {['Signals', 'Decisions', 'Actions', 'Outcomes', 'Learning'].map((item) => (
+                  <div key={item} className="rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-5 text-center text-sm uppercase tracking-[0.18em] text-[#F3F1EA]">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="system" className="border-b border-white/10">
+          <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
+            <div className="mb-12 max-w-3xl">
+              <SectionEyebrow>The system</SectionEyebrow>
+              <h2
+                className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                The model behind predictable growth
               </h2>
               <p className="mt-6 max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
-                The stage order is fixed: Awareness, Consideration, Purchase,
-                Onboarding, Experience, Expansion, Advocacy. Winback sits below
-                as a separate recovery layer triggered by risk.
+                A growth system is not one thing. It is a set of connected layers. Each layer strengthens the others. Remove one, and the system weakens.
+              </p>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {systemLayers.map((item, index) => (
+                <article key={item.title} className="rounded-[28px] border border-white/10 bg-[#151922] p-6">
+                  <div className="text-xs uppercase tracking-[0.22em] text-[#7FA6A1]">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+                  <h3
+                    className="mt-4 text-2xl tracking-[-0.02em] text-white"
+                    style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-[#B7BDC8]">{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="lifecycle" className="border-b border-white/10">
+          <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
+            <div className="mb-10 max-w-3xl">
+              <SectionEyebrow>The lifecycle</SectionEyebrow>
+              <h2
+                className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                Where the system becomes action
+              </h2>
+              <p className="mt-6 max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                This is where marketing actually runs. Not as campaigns, but as a continuous flow of decisions and actions.
+              </p>
+              <p className="mt-4 max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                Each stage answers three questions: what value is created, when do we act, and what signals tell us.
               </p>
             </div>
 
@@ -371,6 +505,85 @@ export default function FixingBrokenMarketingSite() {
                     </ul>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-white/10">
+          <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-20 md:px-8 md:py-24 lg:grid-cols-12 lg:px-12 lg:py-28">
+            <div className="lg:col-span-5">
+              <SectionEyebrow>The real insight</SectionEyebrow>
+              <h2
+                className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                Marketing does not end at purchase
+              </h2>
+            </div>
+            <div className="space-y-5 lg:col-span-7">
+              <p className="max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                Growth is not created only before the sale.
+              </p>
+              <ul className="space-y-3 text-lg leading-8 text-[#B7BDC8]">
+                <li>• when value is delivered</li>
+                <li>• when usage is reinforced</li>
+                <li>• when expansion is unlocked</li>
+                <li>• when trust turns into advocacy</li>
+                <li>• when risk is detected before churn happens</li>
+              </ul>
+              <div className="rounded-[28px] border border-white/10 bg-[#151922] p-6">
+                <p className="text-2xl leading-9 text-white" style={{ fontFamily: 'Georgia, Times New Roman, serif' }}>
+                  Winback is not an exception. It is part of the system.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="outcome" className="border-b border-white/10">
+          <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
+            <div className="mb-10 max-w-3xl">
+              <SectionEyebrow>The outcome</SectionEyebrow>
+              <h2
+                className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                What changes when this works
+              </h2>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                'Teams align around the same logic',
+                'Value is clear at every stage',
+                'Decisions become faster and better',
+                'Marketing connects directly to revenue',
+              ].map((item) => (
+                <div key={item} className="rounded-[28px] border border-white/10 bg-[#151922] p-6 text-lg leading-8 text-[#F3F1EA]">
+                  {item}
+                </div>
+              ))}
+            </div>
+            <p className="mt-8 text-xl leading-9 text-white" style={{ fontFamily: 'Georgia, Times New Roman, serif' }}>
+              Growth becomes more predictable.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
+            <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(135deg,rgba(127,166,161,0.14),rgba(143,167,191,0.08),rgba(255,255,255,0.02))] p-8 md:p-12">
+              <div className="max-w-3xl">
+                <SectionEyebrow>The close</SectionEyebrow>
+                <h2
+                  className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                  style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+                >
+                  This is not another marketing framework.
+                </h2>
+                <p className="mt-6 max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                  It is a way to make marketing actually work.
+                </p>
               </div>
             </div>
           </div>
