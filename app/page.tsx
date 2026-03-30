@@ -1,245 +1,379 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { JsonLd } from '@/components/json-ld';
-import { SectionShell } from '@/components/section-shell';
-import { Callout } from '@/components/callout';
-import { HomeSystemVisual } from '@/components/home-system-visual';
-import { faqs, insights, pillars, principles, siteConfig } from '@/lib/site';
+import { useState } from 'react';
 
-export const metadata: Metadata = {
-  title: 'From Random Acts of Marketing to a Growth System',
-  description:
-    'Most companies do not need more marketing. They need a system that consistently creates, communicates, and delivers value.'
-};
+const stageData = [
+  {
+    id: 'awareness',
+    number: '01',
+    stage: 'Awareness',
+    phase: 'Pre-purchase',
+    accent: 'from-cyan-400/30 to-sky-400/10',
+    ring: 'border-cyan-300/30',
+    text: 'text-cyan-200',
+    icon: '◉',
+    value: 'Clarify the problem and make it visible',
+    trigger: 'First meaningful engagement with the problem space',
+    signals: [
+      'First visit from ICP',
+      'Search intent aligned with the problem',
+      'Initial content interaction',
+    ],
+    short: 'Make the problem visible.',
+  },
+  {
+    id: 'consideration',
+    number: '02',
+    stage: 'Consideration',
+    phase: 'Pre-purchase',
+    accent: 'from-sky-400/30 to-indigo-400/10',
+    ring: 'border-sky-300/30',
+    text: 'text-sky-200',
+    icon: '◎',
+    value: 'Frame the solution and build understanding',
+    trigger: 'Shift from passive interest to active evaluation',
+    signals: [
+      'Repeat visits',
+      'Depth of content consumption',
+      'Comparison or solution-focused content engagement',
+    ],
+    short: 'Move from interest to evaluation.',
+  },
+  {
+    id: 'purchase',
+    number: '03',
+    stage: 'Purchase',
+    phase: 'Pre-purchase',
+    accent: 'from-indigo-400/30 to-violet-400/10',
+    ring: 'border-indigo-300/30',
+    text: 'text-indigo-200',
+    icon: '▣',
+    value: 'Create confidence to act and reduce decision friction',
+    trigger: 'Explicit buying intent',
+    signals: [
+      'Pricing page interaction',
+      'Demo or contact request',
+      'Sales conversation initiated',
+    ],
+    short: 'Reduce friction and create confidence.',
+  },
+  {
+    id: 'onboarding',
+    number: '04',
+    stage: 'Onboarding',
+    phase: 'Post-purchase',
+    accent: 'from-amber-300/30 to-orange-400/10',
+    ring: 'border-amber-300/30',
+    text: 'text-amber-200',
+    icon: '◌',
+    value: 'Deliver first value and reduce uncertainty',
+    trigger: 'Activation moment reached or at risk',
+    signals: [
+      'First successful use',
+      'Onboarding steps completed',
+      'Time-to-value achieved',
+    ],
+    short: 'Deliver first value fast.',
+  },
+  {
+    id: 'experience',
+    number: '05',
+    stage: 'Experience',
+    phase: 'Post-purchase',
+    accent: 'from-orange-300/30 to-yellow-300/10',
+    ring: 'border-orange-300/30',
+    text: 'text-orange-200',
+    icon: '◔',
+    value: 'Ensure continuous value and reinforce usage',
+    trigger: 'Change in engagement, whether positive or negative',
+    signals: [
+      'Usage frequency',
+      'Feature adoption',
+      'Inactivity versus baseline',
+    ],
+    short: 'Reinforce value through use.',
+  },
+  {
+    id: 'expansion',
+    number: '06',
+    stage: 'Expansion',
+    phase: 'Post-purchase',
+    accent: 'from-yellow-300/30 to-orange-400/10',
+    ring: 'border-yellow-300/30',
+    text: 'text-yellow-200',
+    icon: '✦',
+    value: 'Unlock additional value and growth opportunities',
+    trigger: 'Emerging needs or capacity limits',
+    signals: [
+      'Increased usage intensity',
+      'Multi-team adoption',
+      'Requests for additional features or scale',
+    ],
+    short: 'Find the next layer of value.',
+  },
+  {
+    id: 'advocacy',
+    number: '07',
+    stage: 'Advocacy',
+    phase: 'Post-purchase',
+    accent: 'from-orange-400/30 to-amber-300/10',
+    ring: 'border-orange-200/30',
+    text: 'text-orange-100',
+    icon: '✳',
+    value: 'Turn satisfaction into active promotion',
+    trigger: 'Trust and satisfaction threshold exceeded',
+    signals: [
+      'High NPS or satisfaction',
+      'Repeat usage with low friction',
+      'Referrals or organic sharing',
+    ],
+    short: 'Turn satisfaction into promotion.',
+  },
+];
 
-const homeSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Fixing Broken Marketing',
-  description: siteConfig.description,
-  url: siteConfig.url
-};
+const winbackData = [
+  {
+    id: 'risk',
+    title: 'Risk detected',
+    value: 'Identify potential churn before it happens',
+    trigger: 'Negative change in behavior pattern',
+    signals: [
+      'Drop in usage',
+      'Negative feedback',
+      'Reduced engagement versus baseline',
+    ],
+  },
+  {
+    id: 'intervention',
+    title: 'Intervention',
+    value: 'Remove friction and restore perceived value',
+    trigger: 'Confirmed risk signal',
+    signals: ['Support requests', 'Feature gaps', 'Friction points in usage'],
+  },
+  {
+    id: 'winback',
+    title: 'Winback',
+    value: 'Re-establish value and return to lifecycle',
+    trigger: 'Re-engagement opportunity detected',
+    signals: ['Return activity', 'Offer interaction', 'Re-activation events'],
+  },
+];
 
-export default function HomePage() {
+function StageCard({
+  item,
+  active,
+  onEnter,
+}: {
+  item: (typeof stageData)[number];
+  active: boolean;
+  onEnter: () => void;
+}) {
   return (
-    <main id="main">
-      <JsonLd data={homeSchema} />
-
-      <section className="hero-noise surface-grid relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(127,166,161,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(143,167,191,0.12),transparent_30%)]" />
-        <div className="relative mx-auto max-w-[1440px] px-5 py-24 md:px-8 md:py-32 lg:px-12 lg:py-40">
-          <div className="grid gap-14 xl:grid-cols-[minmax(0,0.92fr)_minmax(460px,0.88fr)] xl:items-end">
-            <div className="max-w-5xl">
-              <div className="mb-6 text-sm uppercase tracking-[0.22em] text-textSecondary">Marketing operating system</div>
-              <h1 className="prose-balance max-w-5xl font-display text-5xl font-semibold leading-[0.94] tracking-[-0.045em] md:text-7xl lg:text-[6.35rem]">
-                From Random Acts of Marketing to a Growth System
-              </h1>
-              <p className="mt-8 max-w-content text-lg leading-8 text-textSecondary md:text-xl">
-                Most companies do not need more marketing. They need a system that consistently creates,
-                communicates, and delivers value.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a href="#system" className="rounded-full border border-accentGreen/40 bg-accentGreen/10 px-6 py-3 text-sm font-medium text-white transition hover:bg-accentGreen/20">
-                  Explore the system
-                </a>
-                <Link href="/lifecycle" className="rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-textPrimary transition hover:border-white/30 hover:bg-white/5">
-                  Start with lifecycle
-                </Link>
-              </div>
-            </div>
-            <HomeSystemVisual />
+    <button
+      type="button"
+      onMouseEnter={onEnter}
+      onFocus={onEnter}
+      className={`group relative rounded-[28px] border ${item.ring} bg-gradient-to-br ${item.accent} p-5 text-left transition duration-300 ${
+        active
+          ? 'scale-[1.02] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_20px_60px_rgba(0,0,0,0.35)]'
+          : 'opacity-80 hover:opacity-100'
+      }`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.22em] text-white/55">
+            {item.number} · {item.phase}
+          </div>
+          <div
+            className={`mt-3 text-2xl tracking-[-0.03em] ${item.text}`}
+            style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+          >
+            {item.stage}
           </div>
         </div>
-      </section>
+        <div className={`text-2xl ${item.text}`}>{item.icon}</div>
+      </div>
+      <p className="mt-4 text-sm leading-7 text-white/72">{item.short}</p>
+    </button>
+  );
+}
 
-      <SectionShell
-        eyebrow="The reality most companies face"
-        title="Marketing rarely fails because of effort. It fails because of structure."
-        intro="When expectations are unclear, activity grows but direction weakens. The result is effort without compounding results."
+function DetailPanel({ item }: { item: (typeof stageData)[number] }) {
+  return (
+    <div className="rounded-[32px] border border-white/10 bg-[#151922] p-6 md:p-8">
+      <div className="mt-1 flex items-center gap-3">
+        <div className={`text-sm uppercase tracking-[0.22em] ${item.text}`}>
+          {item.phase}
+        </div>
+        <div className="h-px flex-1 bg-white/10" />
+        <div className="text-xs text-white/40">{item.number}</div>
+      </div>
+
+      <h3
+        className="mt-4 text-4xl tracking-[-0.03em] text-white"
+        style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
       >
-        <div className="grid gap-4 md:grid-cols-2">
-          {[
-            'Campaigns without clear direction',
-            'Messaging that sounds like everyone else',
-            'Customer understanding based on assumptions',
-            'Marketing and sales not aligned',
-            'Product development disconnected from real needs',
-            'Data fragmented across tools'
-          ].map((item) => (
-            <div key={item} className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 text-textSecondary">
-              {item}
-            </div>
-          ))}
-        </div>
-      </SectionShell>
+        {item.stage}
+      </h3>
 
-      <section id="system" className="border-b border-white/10">
-        <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
-          <div className="mb-12 max-w-3xl">
-            <div className="mb-4 text-sm uppercase tracking-[0.2em] text-textMuted">The model</div>
-            <h2 className="font-display text-3xl leading-tight tracking-[-0.03em] md:text-5xl">
-              Marketing starts working when it becomes a connected structure.
-            </h2>
-            <p className="mt-6 max-w-content text-lg leading-8 text-textSecondary">
-              The system starts from real customer problems, defines value clearly, connects marketing,
-              sales, and product, and uses data to learn continuously.
-            </p>
+      <div className="mt-8 grid gap-5 lg:grid-cols-3">
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+          <div className="text-xs uppercase tracking-[0.22em] text-[#8791A1]">
+            Value
           </div>
+          <p className="mt-3 text-base leading-7 text-[#F3F1EA]">
+            {item.value}
+          </p>
+        </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {pillars.map((item) => (
-              <article key={item.number} className="group rounded-panel border border-white/10 bg-surface p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-white/20">
-                <div className="text-xs uppercase tracking-[0.22em] text-accentGreen">{item.number}</div>
-                <h3 className="mt-4 font-display text-2xl tracking-[-0.02em]">{item.title}</h3>
-                <p className="mt-4 text-sm leading-7 text-textSecondary">{item.text}</p>
-                <ul className="mt-5 space-y-2 text-sm text-textMuted">
-                  {item.bullets.map((bullet) => (
-                    <li key={bullet}>• {bullet}</li>
-                  ))}
-                </ul>
-                <Link href={item.href} className="mt-6 inline-flex text-sm text-accentBlue transition group-hover:text-white">
-                  Read guide →
-                </Link>
-              </article>
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+          <div className="text-xs uppercase tracking-[0.22em] text-[#8791A1]">
+            Decision trigger
+          </div>
+          <p className="mt-3 text-base leading-7 text-[#F3F1EA]">
+            {item.trigger}
+          </p>
+        </div>
+
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+          <div className="text-xs uppercase tracking-[0.22em] text-[#8791A1]">
+            Observed signals
+          </div>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-[#B7BDC8]">
+            {item.signals.map((signal) => (
+              <li key={signal}>• {signal}</li>
             ))}
-          </div>
+          </ul>
         </div>
-      </section>
+      </div>
+    </div>
+  );
+}
 
-      <SectionShell
-        eyebrow="Featured guide"
-        title="Lifecycle thinking changes how everything else is built."
-        intro="Most companies focus only on acquisition. The lifecycle guide shows how value is created before the sale, after the sale, and through recovery."
-      >
-        <div className="grid gap-5 lg:grid-cols-[1.2fr_.8fr]">
-          <Callout title="What the lifecycle guide covers">
-            <div className="grid gap-4 md:grid-cols-2">
-              {[
-                'Why acquisition-only thinking breaks growth',
-                'How value evolves across stages',
-                'How to detect risk before churn happens',
-                'Why winback often has the highest ROI'
-              ].map((item) => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-black/10 p-4 text-sm text-textPrimary">
-                  {item}
-                </div>
+export default function FixingBrokenMarketingSite() {
+  const [activeStage, setActiveStage] = useState(stageData[0]);
+
+  return (
+    <div className="min-h-screen bg-[#0F1115] text-[#F3F1EA] selection:bg-[#7FA6A1]/30">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0F1115]/85 backdrop-blur">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 md:px-8 lg:px-12">
+          <div className="text-sm uppercase tracking-[0.18em] text-[#B7BDC8]">
+            Fixing Broken Marketing
+          </div>
+          <nav className="hidden gap-8 text-sm text-[#B7BDC8] md:flex">
+            <a href="#interactive-lifecycle" className="transition hover:text-white">
+              Lifecycle
+            </a>
+            <a href="#winback" className="transition hover:text-white">
+              Winback
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section className="relative overflow-hidden border-b border-white/10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(127,166,161,0.14),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(143,167,191,0.12),transparent_30%)]" />
+          <div className="relative mx-auto max-w-[1440px] px-5 py-24 md:px-8 md:py-32 lg:px-12 lg:py-36">
+            <div className="max-w-4xl">
+              <div className="mb-6 text-sm uppercase tracking-[0.22em] text-[#B7BDC8]">
+                Funnel + Lifecycle
+              </div>
+              <h1
+                className="max-w-5xl text-5xl font-medium leading-[0.96] tracking-[-0.04em] md:text-7xl lg:text-[6rem]"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                Where the system becomes action.
+              </h1>
+              <p className="mt-8 max-w-[65ch] text-lg leading-8 text-[#B7BDC8] md:text-xl">
+                Each stage answers three questions: what value is created, when
+                to act, and which signals indicate movement.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="interactive-lifecycle" className="border-b border-white/10">
+          <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
+            <div className="mb-10 max-w-3xl">
+              <div className="mb-4 text-sm uppercase tracking-[0.2em] text-[#8791A1]">
+                The continuous lifecycle
+              </div>
+              <h2
+                className="text-3xl leading-tight tracking-[-0.03em] md:text-5xl"
+                style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+              >
+                Marketing does not end at purchase.
+              </h2>
+              <p className="mt-6 max-w-[65ch] text-lg leading-8 text-[#B7BDC8]">
+                The stage order is fixed: Awareness, Consideration, Purchase,
+                Onboarding, Experience, Expansion, Advocacy. Winback sits below
+                as a separate recovery layer triggered by risk.
+              </p>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-7">
+              {stageData.map((item) => (
+                <StageCard
+                  key={item.id}
+                  item={item}
+                  active={activeStage.id === item.id}
+                  onEnter={() => setActiveStage(item)}
+                />
               ))}
             </div>
-            <Link
-              href="/lifecycle"
-              className="mt-6 inline-flex rounded-full border border-white/15 px-5 py-3 text-sm text-white transition hover:border-white/30 hover:bg-white/5"
-            >
-              Read the lifecycle guide
-            </Link>
-          </Callout>
-          <Callout title="How to use this site">
-            <ol className="space-y-3 text-sm text-textPrimary">
-              <li>1. Start with the full system.</li>
-              <li>2. Go deeper into the weakest layer.</li>
-              <li>3. Use the PDF for sharing and internal alignment.</li>
-            </ol>
-            <Link href="/downloads" className="mt-4 inline-flex text-sm text-accentBlue transition hover:text-white">
-              Open downloads →
-            </Link>
-          </Callout>
-        </div>
-      </SectionShell>
 
-      <SectionShell
-        eyebrow="Operations and tracking"
-        title="Connect signals across the lifecycle."
-        intro="A shared funnel, clear tracking, and a visible feedback loop create the operating conditions for predictable growth."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          {[
-            {
-              title: 'Shared funnel',
-              body: 'Visitor → Lead → MQL → SQL → Opportunity → Customer'
-            },
-            {
-              title: 'Tracking',
-              body: 'First-party data, UTM parameters, consented event tracking, server-side tracking, and conversion APIs.'
-            },
-            {
-              title: 'Feedback loop',
-              body: 'Sales objections and lost deals, marketing engagement and signals, product usage and feedback.'
-            },
-            {
-              title: 'Operating rhythm',
-              body: 'Long-term strategy, mid-term themes, and short-term execution cycles.'
-            }
-          ].map((item) => (
-            <article key={item.title} className="rounded-panel border border-white/10 bg-surface p-6">
-              <div className="text-sm uppercase tracking-[0.2em] text-accentBlue">{item.title}</div>
-              <p className="mt-4 text-sm leading-7 text-textSecondary">{item.body}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell eyebrow="Selected insights" title="Activity without accumulation is not growth.">
-        <div className="grid gap-5 md:grid-cols-3">
-          {insights.map((item) => (
-            <article key={item.title} className="rounded-panel border border-white/10 bg-surface p-6">
-              <h3 className="font-display text-2xl tracking-[-0.02em]">{item.title}</h3>
-              <p className="mt-4 text-sm leading-7 text-textSecondary">{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell id="faq" eyebrow="FAQ" title="Clear answers for search, readers, and AI systems.">
-        <div className="space-y-4">
-          {faqs.map((item) => (
-            <details key={item.q} className="rounded-[24px] border border-white/10 bg-surface p-6 open:border-white/20">
-              <summary className="cursor-pointer list-none text-lg text-white">{item.q}</summary>
-              <p className="mt-4 max-w-content text-sm leading-7 text-textSecondary">{item.a}</p>
-            </details>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
-        id="principles"
-        eyebrow="Core principles"
-        title="Clarity creates leverage."
-        intro="The goal is not to add more tactics. It is to build a system that makes decisions clearer, execution more consistent, and growth more predictable."
-      >
-        <div className="grid gap-4 md:grid-cols-2">
-          {principles.map((item) => (
-            <div key={item} className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 text-textPrimary">
-              {item}
+            <div className="mt-8">
+              <DetailPanel item={activeStage} />
             </div>
-          ))}
-        </div>
-      </SectionShell>
 
-      <SectionShell
-        id="about"
-        eyebrow="About this site"
-        title="Not more tactics. A better way to think."
-        intro="Most marketing problems are not caused by lack of effort or intelligence. They are caused by weak structure, unclear ownership, and disconnected decisions. This site exists to make the system visible."
-      >
-        <Callout title="Point of view">
-          A system without a point of view becomes efficient distribution for generic ideas. The purpose of this site is to make the system visible enough to improve real decisions.
-        </Callout>
-      </SectionShell>
+            <div
+              id="winback"
+              className="mt-8 rounded-[32px] border border-white/10 bg-[#151922] p-6 md:p-8"
+            >
+              <div className="text-xs uppercase tracking-[0.24em] text-[#8791A1]">
+                Winback
+              </div>
+              <div className="mt-5 grid gap-5 md:grid-cols-3">
+                {winbackData.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5"
+                  >
+                    <div
+                      className="text-xl text-white"
+                      style={{ fontFamily: 'Georgia, Times New Roman, serif' }}
+                    >
+                      {item.title}
+                    </div>
 
-      <section>
-        <div className="mx-auto max-w-[1440px] px-5 py-20 md:px-8 md:py-24 lg:px-12 lg:py-28">
-          <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(135deg,rgba(127,166,161,0.14),rgba(143,167,191,0.08),rgba(255,255,255,0.02))] p-8 md:p-12">
-            <div className="max-w-3xl">
-              <div className="mb-4 text-sm uppercase tracking-[0.2em] text-textSecondary">Final outcome</div>
-              <h2 className="font-display text-3xl leading-tight tracking-[-0.03em] md:text-5xl">
-                Aligned teams. Clear value. Better decisions. Predictable growth.
-              </h2>
-              <p className="mt-6 max-w-content text-lg leading-8 text-textSecondary">
-                Marketing starts driving revenue when it stops behaving like disconnected activity and starts operating as a system.
-              </p>
+                    <div className="mt-4 text-xs uppercase tracking-[0.22em] text-[#8791A1]">
+                      Value
+                    </div>
+                    <p className="mt-2 text-sm leading-7 text-[#F3F1EA]">
+                      {item.value}
+                    </p>
+
+                    <div className="mt-4 text-xs uppercase tracking-[0.22em] text-[#8791A1]">
+                      Decision trigger
+                    </div>
+                    <p className="mt-2 text-sm leading-7 text-[#F3F1EA]">
+                      {item.trigger}
+                    </p>
+
+                    <div className="mt-4 text-xs uppercase tracking-[0.22em] text-[#8791A1]">
+                      Observed signals
+                    </div>
+                    <ul className="mt-2 space-y-1 text-sm leading-7 text-[#B7BDC8]">
+                      {item.signals.map((signal) => (
+                        <li key={signal}>• {signal}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </div>
   );
 }
