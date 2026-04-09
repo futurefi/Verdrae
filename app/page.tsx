@@ -1,5 +1,3 @@
-// ⚠️ Your types stay the same (unchanged)
-
 type DeepDiveSection = {
   heading: string;
   paragraphs?: string[];
