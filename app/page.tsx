@@ -780,6 +780,20 @@ export default function Page() {
           </div>
         </header>
 
+        <nav className="sticky top-0 z-50 mt-6 mb-6 rounded-2xl border border-white/10 bg-[#0D0D0D]/80 px-4 py-3 backdrop-blur">
+          <div className="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-[#A5ABB1]">
+            {sections.map((section) => (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                className="rounded-full border border-white/10 px-3 py-1 transition hover:border-[#5F7F73]/40 hover:text-white"
+              >
+                {section.title}
+              </a>
+            ))}
+          </div>
+        </nav>
+
         <section className="mt-10 rounded-[28px] border border-white/10 bg-[#121212] p-7 md:p-10">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
@@ -837,97 +851,102 @@ export default function Page() {
           </div>
         </section>
 
-        <section className="mt-10 space-y-8">
-          {sections.map((section) => (
-            <article
-              key={section.id}
-              id={section.id}
-              className="overflow-hidden rounded-[30px] border border-white/10 bg-[#121212]/90 shadow-xl shadow-black/20"
-            >
-              <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="border-b border-white/10 bg-gradient-to-br from-white/[0.02] to-white/[0.01] p-6 lg:border-b-0 lg:border-r lg:p-8">
-                  <div className="mb-5 text-sm uppercase tracking-[0.24em] text-[#C2A96A]">
-                    Section {section.number}
-                  </div>
-                  <div className="aspect-[4/3] w-full overflow-hidden rounded-[24px] border border-white/10 bg-[#0F0F0F]">
-                    {section.image}
-                  </div>
-                </div>
+        <section className="mt-16 space-y-12">
+          {sections.map((section, index) => (
+            <div key={section.id} className="relative">
+              {index !== 0 ? (
+                <div className="absolute -top-6 left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#5F7F73]/30 to-transparent" />
+              ) : null}
 
-                <div className="p-6 md:p-8 lg:p-10">
-                  <h2 className="text-2xl font-light text-[#E1E4E6] md:text-3xl">{section.title}</h2>
-                  <p className="mt-4 max-w-xl text-base leading-7 text-[#A5ABB1]">{section.summary}</p>
-
-                  <div className="mt-6 rounded-[24px] border border-white/8 bg-black/10 p-5">
-                    <p className="text-sm uppercase tracking-[0.22em] text-[#8A8F94]">Why it breaks</p>
-                    <ul className="mt-4 space-y-3 text-sm leading-7 text-[#B5BBC0]">
-                      {section.breaks.map((item) => (
-                        <li key={item} className="flex gap-3">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C2A96A]" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+              <article
+                id={section.id}
+                className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[#121212]/90 shadow-xl shadow-black/20 transition hover:border-[#5F7F73]/30"
+              >
+                <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+                  <div className="border-b border-white/10 bg-gradient-to-br from-white/[0.02] to-white/[0.01] p-6 lg:border-b-0 lg:border-r lg:p-8">
+                    <div className="mb-5 text-sm uppercase tracking-[0.24em] text-[#C2A96A]">
+                      Section {section.number}
+                    </div>
+                    <div className="aspect-[4/3] w-full overflow-hidden rounded-[24px] border border-white/10 bg-[#0F0F0F]">
+                      {section.image}
+                    </div>
                   </div>
 
-                  <div className="mt-6 rounded-[24px] border border-white/8 bg-white/[0.02] p-5">
-                    <p className="text-sm uppercase tracking-[0.22em] text-[#8A8F94]">The problem</p>
-                    <p className="mt-4 max-w-2xl text-sm leading-8 text-[#B7BDC2]">{section.problemIntro}</p>
+                  <div className="p-6 md:p-8 lg:p-10">
+                    <h2 className="text-2xl font-light text-[#E1E4E6] md:text-3xl">{section.title}</h2>
+                    <p className="mt-4 max-w-xl text-base leading-7 text-[#A5ABB1]">{section.summary}</p>
 
-                    <div className="mt-5">
-                      <p className="text-sm text-[#D9DCDF]">Instead of:</p>
-                      <ul className="mt-3 space-y-2 text-sm leading-7 text-[#B5BBC0]">
-                        {section.problemInstead.map((item) => (
+                    <div className="mt-6 rounded-[24px] border border-white/8 bg-black/10 p-5">
+                      <p className="text-sm uppercase tracking-[0.22em] text-[#8A8F94]">Why it breaks</p>
+                      <ul className="mt-4 space-y-3 text-sm leading-7 text-[#B5BBC0]">
+                        {section.breaks.map((item) => (
                           <li key={item} className="flex gap-3">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#5F7F73]" />
+                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C2A96A]" />
                             <span>{item}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="mt-5">
-                      <p className="text-sm text-[#D9DCDF]">They rely on:</p>
-                      <ul className="mt-3 space-y-2 text-sm leading-7 text-[#B5BBC0]">
-                        {section.problemRely.map((item) => (
-                          <li key={item} className="flex gap-3">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#8A8F94]" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                    <div className="mt-6 rounded-[24px] border border-white/8 bg-white/[0.02] p-5">
+                      <p className="text-sm uppercase tracking-[0.22em] text-[#8A8F94]">The problem</p>
+                      <p className="mt-4 max-w-2xl text-sm leading-8 text-[#B7BDC2]">{section.problemIntro}</p>
 
-                  <details className="group mt-6 rounded-[24px] border border-[#5F7F73]/18 bg-[#5F7F73]/[0.05] p-5 open:bg-[#5F7F73]/[0.07]">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm uppercase tracking-[0.2em] text-[#D7DBDE]">
-                      <span>{section.expandLabel}</span>
-                      <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-[#C2A96A] transition group-open:rotate-180">
-                        ↓
-                      </span>
-                    </summary>
-
-                    <div className="mt-6 space-y-6">
-                      {section.deepDiveSections.map((part) => (
-                        <DeepDiveSectionBlock key={part.heading} part={part} />
-                      ))}
-
-                      <div className="rounded-[20px] border border-[#C2A96A]/14 bg-[#C2A96A]/[0.04] p-5">
-                        <p className="text-sm uppercase tracking-[0.2em] text-[#8A8F94]">Principles</p>
-                        <ul className="mt-4 space-y-2 text-sm leading-7 text-[#D7DBDE]">
-                          {section.principles.map((item) => (
+                      <div className="mt-5">
+                        <p className="text-sm text-[#D9DCDF]">Instead of:</p>
+                        <ul className="mt-3 space-y-2 text-sm leading-7 text-[#B5BBC0]">
+                          {section.problemInstead.map((item) => (
                             <li key={item} className="flex gap-3">
-                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C2A96A]" />
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#5F7F73]" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="mt-5">
+                        <p className="text-sm text-[#D9DCDF]">They rely on:</p>
+                        <ul className="mt-3 space-y-2 text-sm leading-7 text-[#B5BBC0]">
+                          {section.problemRely.map((item) => (
+                            <li key={item} className="flex gap-3">
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#8A8F94]" />
                               <span>{item}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
                     </div>
-                  </details>
+
+                    <details className="group mt-6 rounded-[24px] border border-[#5F7F73]/18 bg-[#5F7F73]/[0.05] p-5 open:bg-[#5F7F73]/[0.07]">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm uppercase tracking-[0.2em] text-[#D7DBDE]">
+                        <span>{section.expandLabel}</span>
+                        <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-[#C2A96A] transition group-open:rotate-180">
+                          ↓
+                        </span>
+                      </summary>
+
+                      <div className="mt-6 space-y-6">
+                        {section.deepDiveSections.map((part) => (
+                          <DeepDiveSectionBlock key={part.heading} part={part} />
+                        ))}
+
+                        <div className="rounded-[20px] border border-[#C2A96A]/14 bg-[#C2A96A]/[0.04] p-5">
+                          <p className="text-sm uppercase tracking-[0.2em] text-[#8A8F94]">Principles</p>
+                          <ul className="mt-4 space-y-2 text-sm leading-7 text-[#D7DBDE]">
+                            {section.principles.map((item) => (
+                              <li key={item} className="flex gap-3">
+                                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C2A96A]" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </div>
           ))}
         </section>
 
